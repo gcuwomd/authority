@@ -1,0 +1,61 @@
+server:
+  port: 8100
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+#          设置授权服务地址，解析token时获取密钥
+          issuer-uri: http://127.0.0.1：8080
+          #依赖qq邮箱
+  mail:
+    default-encoding: utf-8
+    host: smtp.qq.com
+    username: .com
+    password: 授权码
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.port: 465
+      mail.smtp.ssl.enable: true
+      mail.smtp.timeout: 5000
+      mail.smtp.writetimeout: 5000
+    protocol: smtp
+    #数据库配置需要更改
+  datasource:
+    url: jdbc:mysql://43.139.117.216:4406/resourcerecruit
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #redis
+  data:
+    redis:
+      host: 127.0.0.1
+      password: root
+      port: 6379
+      timeout: 6000
+      #是否允许方法重写
+  main:
+    allow-bean-definition-overriding: true
+  web:
+    resources:
+      #设置资源默认路径
+      static-locations: classpath:/static/
+      chain:
+        strategy:
+          content:
+            mime-type:
+              css: text/css
+# 设置mybatis映射位置
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.example.resourceserver.mapper
+  configuration:
+    map-underscore-to-camel-case: true
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #腾讯云密钥
+secretId:
+secretKey: 
+# oss存储捅
+bucketName:
+# 邮件的发送方
+form:
