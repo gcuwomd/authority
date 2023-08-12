@@ -1,7 +1,5 @@
 package com.example.authority.config;
-import com.example.resourceserver.util.RedisUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,8 +21,6 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 @EnableMethodSecurity(jsr250Enabled = true, securedEnabled = true)
 public class ResourceServerConfig {
-    @Autowired
-    RedisUtil redisUtil;
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
@@ -60,11 +56,6 @@ public class ResourceServerConfig {
      * */
         @Bean
         public JwtAuthenticationConverter jwtAuthenticationConverter(HttpServletRequest request) {
-            System.out.println(request);
-            if(request.toString()!="Current HttpServletRequest"){
-                System.out.println(request.getRequestURI());
-                redisUtil.set("1",request.getRequestURI());
-            }
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         // 设置解析权限信息的前缀，设置为空是去掉前缀
         grantedAuthoritiesConverter.setAuthorityPrefix("");
