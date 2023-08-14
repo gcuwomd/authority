@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.authority.mapper.WebsiteMapper">
+    <insert id="addOrganization">
+        insert into unity_organization (organization_id, organization_name, organization_avatar) values (#{organizationId},#{organizationName},#{organizationAvatar})
+    </insert>
+    <insert id="addDepartment" >
+        insert into unity_department (department_id, organization_id, department_name) VALUES (#{departmentId},#{organizationId},#{departmentName})
+    </insert>
+    <insert id="addWebsite">
+        insert into unity_website (website_id, department_id, website_url, website_name, website_logo) VALUES (#{websiteId},#{departmentId},#{websiteUrl},#{websiteName},#{websiteLogo})
+    </insert>
+    <insert id="insertApi">
+        insert into unity_system_api (website_id, api_id, api_url, api_description, api_method) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.websiteId},#{item.apiId},#{item.apiUrl},#{item.apiDescription},#{item.apiMethod})
+        </foreach>
+    </insert>
+    <insert id="insertRoute">
+        insert into  unity_route_list (website_id, route_id, route_url, route_description) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.websiteId},#{item.routeId},#{item.routeUrl},#{item.routeDescription})
+        </foreach>
+
+
+    </insert>
+    <update id="modifyWebsite">
+        UPDATE unity_website
+        <set>
+            <if test="departmentId != null">department_id = #{departmentId},</if>
+            <if test="websiteUrl != null">website_url = #{websiteUrl},</if>
+            <if test="websiteName != null">website_name = #{websiteName},</if>
+            <if test="websiteLogo != null">website_logo = #{websiteLogo},</if>
+        </set>
+        WHERE website_id = #{websiteId}
+    </update>
+
+    <delete id="deletePermisson">
+        <if test="type=='api'">
+            delete from unity_role_api where api_id=#{id}
+        </if>
+        <if test="type=='route'">
+            delete from unity_route_list where route_id=#{id}
+        </if>
+    </delete>
+    <delete id="deletePermissonRelation">
+        <if test="type=='api'">
+            delete from unity_system_api where api_id=#{id}
+        </if>
+        <if test="type=='route'">
+            delete from unity_role_route where role_id=#{id}
+        </if>
+    </delete>
+    <delete id="deleteWebsite">
+        delete from unity_website where website_id=#{websiteId}
+    </delete>
+    <resultMap id="OrganizationMap" type="com.example.authority.pojo.OrganizationType">
+        <id property="value" column="organization_id"/>
+        <result property="label" column="organization_name"/>
+        <collection property="children" javaType="java.util.List" ofType="com.example.authority.pojo.DepartmentType">
+            <id property="value" column="department_id"/>
+            <result property="label" column="department_name"/>
+        </collection>
+    </resultMap>
+
+    <select id="getOrganization" resultMap="OrganizationMap">
+        SELECT o.organization_id, o.organization_name, d.department_id, d.department_name
+        FROM unity_organization o
+                 LEFT JOIN unity_department d ON o.organization_id = d.organization_id
+    </select>
+    <select id="getWebsiteList" resultType="com.example.authority.pojo.pojoPlus.WebsitePlus">
+        select  website_id,website_name,website_url,website_logo ,department_name from unity_website,unity_department WHERE
+                unity_website.department_id IN (SELECT department_id FROM unity_user WHERE  username=#{id}) AND unity_website.department_id=unity_department.department_id
+
+    </select>
+    <select id="getApiList" resultType="com.example.authority.pojo.UnitySystemApi">
+        SELECT  * from unity_system_api
+    </select>
+    <select id="getRouteList" resultType="com.example.authority.pojo.UnityRouteList">
+        SELECT * FROM unity_route_list
+    </select>
+    <select id="websiteRouteNumber" resultType="java.lang.Integer">
+        select count(*) FROM unity_route_list WHERE website_id=#{websiteId}
+    </select>
+    <select id="getWebsiteInfo" resultType="com.example.authority.pojo.Website">
+        select  website_id,website_url,department_name,website_name from unity_website,unity_department where website_id=#{websiteId} AND unity_website.department_id=unity_department.department_id
+    </select>
+    <select id="websiteApiNumber" resultType="java.lang.Integer">
+        select count(*) from unity_system_api where website_id=#{websiteId}
+    </select>
+    <select id="getApiListByMethodWebsiteId" resultType="com.example.authority.pojo.UnitySystemApi">
+        SELECT  * from unity_system_api
+        <where>
+            <if test="method != 'null'">api_method=#{method}</if>
+            <if test="websiteId != 'null'">AND website_id=#{websiteId}</if >
+        </where>
+    </select>
+
+
+</mapper>

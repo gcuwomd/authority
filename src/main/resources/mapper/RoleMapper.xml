@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.authority.mapper.RoleMapper">
+    <insert id="addRole">
+        INSERT INTO unity_role (department_id, role_id, role_name) VALUES (#{departmentId},#{roleId},#{roleName})
+    </insert>
+    <insert id="addApiAuthority">
+        insert into unity_role_api (role_id, api_id, website_id) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{roleId},#{item},#{websiteId})
+        </foreach>
+    </insert>
+    <insert id="addRouteAuthority">
+        insert into unity_role_route (role_id, route_id, website_id) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{roleId},#{item},#{websiteId})
+        </foreach>
+    </insert>
+    <delete id="deleteRole">
+        delete from unity_role where role_id=#{roleId}
+    </delete>
+    <delete id="deleteRoleApi">
+        delete  from unity_role_api where api_id IN 
+            <foreach collection="api" item="apiId" separator="," open="(" close=")">
+                #{apiId}
+            </foreach>
+    </delete>
+    <delete id="deleteRoleRoute">
+        delete  from unity_role_route where route_id IN
+        <foreach collection="route" item="route_id" separator="," open="(" close=")">
+            #{route_id}
+        </foreach>
+    </delete>
+
+    <select id="getRoleList" resultType="com.example.authority.pojo.Role">
+        select role_id,role_name from unity_role where department_id=#{departmentId}
+    </select>
+</mapper>

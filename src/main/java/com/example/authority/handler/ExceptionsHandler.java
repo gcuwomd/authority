@@ -1,6 +1,7 @@
 package com.example.authority.handler;
 
 import com.example.authority.util.ResultUtil;
+import com.qcloud.cos.exception.CosServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
@@ -38,6 +39,12 @@ public class ExceptionsHandler {
         ;
         ex.printStackTrace();
         return new ResultUtil(403,"缺少参数或参数错误",null);
+    }
+    @ExceptionHandler(value = CosServiceException.class)
+    public ResultUtil cos(Exception ex){
+        log.info("全局处理");
+        ex.printStackTrace();
+        return new ResultUtil(500,"删除失败",null);
     }
     @ExceptionHandler(Exception.class)
     public ResultUtil ex(Exception ex){
