@@ -3,5 +3,51 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.authority.mapper.MemberMapper">
+    <insert id="addUserRoel">
+        insert into unity_user_role (username, role_id) VALUES
+        <foreach collection="list" item="roleId" separator="," >
+           (#{username},#{roleId})
+        </foreach>
+    </insert>
+    <update id="modifyUser">
+        update unity_user
+        <set>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="major != null">major = #{major},</if>
+            <if test="grade != null">grade = #{grade},</if>
+            <if test="classNumber != null">class_number = #{classNumber},</if>
+            <if test="dorm != null">dorm = #{dorm},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="politicsStatus != null">politicsStatus = #{politicsStatus},</if>
+            <if test="email != null">email = #{email},</if>
+        </set>
+        WHERE username = #{username}
 
+    </update>
+    <delete id="deleteRelation">
+        delete  from unity_user_role where username IN
+        <foreach collection="list" item="username" separator="," open="(" close=")">
+            #{username}
+        </foreach>
+    </delete>
+    <delete id="deleteMember">
+        delete  from unity_user where username IN
+        <foreach collection="list" item="username" separator="," open="(" close=")">
+            #{username}
+        </foreach>
+    </delete>
+
+    <select id="getMemberList" resultType="com.example.authority.pojo.User">
+        select department_id, username, name, phone, email, nick_name, major, grade, class_number, dorm, politicsStatus, avatar, position From unity_user
+        <where >
+            <if test="searchType=='phone'">phone=#{keyword}</if>
+            <if test="searchType=='username'">username=#{username}</if>
+            <if test="searchType=='name'">name=#{name}</if>
+            <if test="searchType=='major'">major=#{major}</if>
+        </where>
+    </select>
 </mapper>

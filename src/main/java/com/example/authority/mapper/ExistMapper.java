@@ -10,4 +10,5 @@ public interface ExistMapper {
     boolean apiExist(String apiUrl);
     boolean routeExist(String routeUrl);
     boolean RoleExist(String key);
+    boolean UserExist(String key);
 }

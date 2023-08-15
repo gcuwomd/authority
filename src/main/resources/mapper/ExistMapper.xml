@@ -21,5 +21,8 @@
     <select id="RoleExist" resultType="java.lang.Boolean">
         select count(*) from  unity_role where role_name=#{key} OR role_id=#{key}
     </select>
+    <select id="UserExist" resultType="java.lang.Boolean">
+        select count(*) from unity_user where username=#{key}
+    </select>
 
 </mapper>
