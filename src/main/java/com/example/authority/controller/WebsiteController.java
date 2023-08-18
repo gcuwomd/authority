@@ -3,10 +3,7 @@ package com.example.authority.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.example.authority.Service.WebsiteService;
 import com.example.authority.mapper.ExistMapper;
-import com.example.authority.pojo.Organization;
-import com.example.authority.pojo.UnityRouteList;
-import com.example.authority.pojo.UnitySystemApi;
-import com.example.authority.pojo.Website;
+import com.example.authority.pojo.*;
 import com.example.authority.util.OssUtil;
 import com.example.authority.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,14 +143,15 @@ public class WebsiteController {
 //        if (method.equals("null")) method = null;
         if (!((type.equals("api")) || (type.equals("route")) || (type.equals("all"))))
             return new ResultUtil(403, "type类型错误", null);
-        if (type.equals("api"))
-            return ResultUtil.sucess(websiteService.getApiListByMethodWebsite(page, pageSize, method, websiteId));
-        if (type.equals("route"))
-            return ResultUtil.sucess(websiteService.getRouteList(page, pageSize));
+//        if (type.equals("api"))
+//            return ResultUtil.sucess(websiteService.getApiListByMethodWebsite(page, pageSize, method, websiteId));
+//        if (type.equals("route"))
+//            return ResultUtil.sucess(websiteService.getRouteList(page, pageSize));
         JSONObject list = new JSONObject();
         list.put("api", websiteService.getApiList(page, pageSize));
         list.put("route", websiteService.getRouteList(page, pageSize));
-        return ResultUtil.sucess(list);
+        JSONObject websitePermissions = websiteService.getWebsitePermissions(websiteId);
+        return ResultUtil.sucess(websitePermissions);
     }
 
     @GetMapping("/auth/website/detail")

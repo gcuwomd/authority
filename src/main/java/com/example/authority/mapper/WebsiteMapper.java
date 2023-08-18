@@ -1,6 +1,7 @@
 package com.example.authority.mapper;
 
 import com.example.authority.pojo.*;
+import com.example.authority.pojo.pojoPlus.WebsitePageApi;
 import com.example.authority.pojo.pojoPlus.WebsitePlus;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -34,5 +35,8 @@ public interface WebsiteMapper {
    Integer websiteApiNumber(String websiteId);
    Integer websiteRouteNumber(String websiteId);
 
-    List<UnitySystemApi> getApiListByMethodWebsiteId(String method, String websiteId);
+   List<UnitySystemApi> getApiListByMethodWebsiteId(String method, String websiteId);
+
+   List<WebsitePageApi> queryWebsitePageApi(String websiteId);
+   List<UnitySystemApi> queryWebsiteGlobalApi(String websiteId);
 }

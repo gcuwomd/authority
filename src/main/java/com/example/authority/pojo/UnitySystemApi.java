@@ -9,4 +9,6 @@ public class UnitySystemApi {
     private  String apiUrl;
     private String apiDescription;
     private String apiMethod;
+    private String routeId;
+    private  String apiType;
 }

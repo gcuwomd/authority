@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.authority.Service.WebsiteService;
 import com.example.authority.mapper.WebsiteMapper;
 import com.example.authority.pojo.*;
+import com.example.authority.pojo.pojoPlus.WebsitePageApi;
 import com.example.authority.pojo.pojoPlus.WebsitePlus;
 import com.example.authority.util.uuidUtil;
 import com.github.pagehelper.Page;
@@ -19,7 +20,7 @@ import java.util.List;
 @Service
 
 public class WebsiteServiceImpl implements WebsiteService {
-@Autowired
+    @Autowired
     WebsiteMapper websiteMapper;
     @Override
     @Transactional(rollbackFor=Exception.class)//出现所有异常都会回滚
@@ -138,7 +139,14 @@ public class WebsiteServiceImpl implements WebsiteService {
         return websiteInfo;
     }
 
-
-
+    @Override
+    public JSONObject getWebsitePermissions(String websiteId){
+        JSONObject permissions = new JSONObject();
+        List<WebsitePageApi> pageApis = websiteMapper.queryWebsitePageApi(websiteId);
+        List<UnitySystemApi> globalApi = websiteMapper.queryWebsiteGlobalApi(websiteId);
+        permissions.put("routes",pageApis);
+        permissions.put("globalApi",globalApi);
+        return permissions;
+    }
 
 }

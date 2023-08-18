@@ -13,9 +13,9 @@
         insert into unity_website (website_id, department_id, website_url, website_name, website_logo) VALUES (#{websiteId},#{departmentId},#{websiteUrl},#{websiteName},#{websiteLogo})
     </insert>
     <insert id="insertApi">
-        insert into unity_system_api (website_id, api_id, api_url, api_description, api_method) values
+        insert into unity_system_api (website_id, api_id, api_url, api_description, api_method,route_id,api_type) values
         <foreach collection="list" item="item" separator=",">
-            (#{item.websiteId},#{item.apiId},#{item.apiUrl},#{item.apiDescription},#{item.apiMethod})
+            (#{item.websiteId},#{item.apiId},#{item.apiUrl},#{item.apiDescription},#{item.apiMethod},#{item.routeId},#{item.apiType})
         </foreach>
     </insert>
     <insert id="insertRoute">
@@ -96,6 +96,84 @@
             <if test="method != 'null'">api_method=#{method}</if>
             <if test="websiteId != 'null'">AND website_id=#{websiteId}</if >
         </where>
+    </select>
+    <resultMap id="pageApiMap" type="com.example.authority.pojo.pojoPlus.WebsitePageApi">
+        <id column="route_id" property="routeId" />
+        <result column="website_id" property="websiteId" />
+        <result column="route_url" property="routeUrl" />
+        <result column="route_description" property="routeDescription" />
+        <result column="api_count" property="apiCount" />
+        <result property="pageApi" column="page_api" typeHandler="com.example.authority.handler.PageApiTypeHandler" />
+    </resultMap>
+    <select id="queryWebsitePageApi" resultMap="pageApiMap">
+        SELECT routeList.*,pageApi.total AS api_count,pageApi.info AS page_api
+        FROM unity_route_list AS routeList
+                LEFT JOIN (
+                SELECT
+                    DISTINCT api.website_id,
+                             api.route_id,
+                             api_count.total AS total,
+                             # 将一个站点页面的所有接口信息合并成一个json数组
+                             CONCAT(
+                                     '[',
+                                     GROUP_CONCAT(
+                                            # 站点页面接口信息对象
+                                             JSON_OBJECT(
+                                                     'websiteId',
+                                                     api.website_id,
+                                                     'apiId',
+                                                     api.api_id,
+                                                     'apiUrl',
+                                                     api.api_url,
+                                                     'apiDescription',
+                                                     api.api_description,
+                                                     'apiMethod',
+                                                     api.api_method,
+                                                     'apiType',
+                                                     api.api_type
+                                                 ) SEPARATOR ','
+                                         ),
+                                     ']'
+                                 ) AS info
+                FROM
+                    unity_system_api AS api
+                        LEFT JOIN (
+                        # 查询站点页面包含的后端接口数量
+                        SELECT
+                            _api.website_id,
+                            _api.route_id,
+                            COUNT(1) AS total
+                        FROM
+                            unity_system_api AS _api
+                        WHERE
+                            _api.route_id IS NOT NULL
+                        GROUP BY
+                            _api.website_id,
+                            _api.route_id
+                    ) AS api_count ON api.website_id = api_count.website_id
+                        AND api.route_id = api_count.route_id
+                WHERE
+                    api.website_id = #{websiteId}
+                  AND api.route_id IS NOT NULL
+                GROUP BY
+                    api.website_id,
+                    api.route_id,
+                    total
+            ) AS pageApi ON routeList.website_id = pageApi.website_id
+                AND routeList.route_id = pageApi.route_id
+        WHERE
+            routeList.website_id = #{websiteId}
+        GROUP BY
+            routeList.website_id,
+            routeList.route_id,
+            routeList.route_url,
+            routeList.route_description,
+            pageApi.total,
+            pageApi.info
+    </select>
+    <select id="queryWebsiteGlobalApi" resultType="com.example.authority.pojo.UnitySystemApi">
+        SELECT * FROM unity_system_api
+        WHERE website_id = #{websiteId} AND route_id IS NULL
     </select>
 
 

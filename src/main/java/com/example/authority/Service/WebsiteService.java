@@ -30,4 +30,6 @@ public interface WebsiteService {
 
     JSONObject getWebsiteDetail(String websiteId);
 
+    JSONObject getWebsitePermissions(String websiteId);
+
 }
