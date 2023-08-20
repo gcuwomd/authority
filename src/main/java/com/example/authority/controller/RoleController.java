@@ -64,7 +64,7 @@ public class RoleController {
         if (roleService.deleteRole(roleId)) {
             return ResultUtil.sucess();
         }
-        return ResultUtil.error();
+        return new ResultUtil(403,"角色不存在",null);
     }
 
     @PutMapping("/auth/role/permission")
@@ -78,7 +78,7 @@ public class RoleController {
         if (roleService.deleteRoleApiRoute(route, api)) {
             return ResultUtil.sucess();
         }
-        return ResultUtil.error();
+        return new ResultUtil(403,"route或api不存在",null);
 
     }
 }

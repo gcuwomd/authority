@@ -25,11 +25,11 @@ public class WebsiteServiceImpl implements WebsiteService {
     @Override
     @Transactional(rollbackFor=Exception.class)//出现所有异常都会回滚
     public boolean deletePermission(String type, String id) {
-        if (websiteMapper.deletePermisson(type,id)) {
+        websiteMapper.deletePermisson(type,id);
             if (websiteMapper.deletePermissonRelation(type,id)) {
                 return  true;
             }
-        }
+
         return false;
     }
 
