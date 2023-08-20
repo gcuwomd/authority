@@ -41,6 +41,7 @@ public class CommonController {
     }
     @DeleteMapping("/auth/photo")
     ResultUtil deleteImg(String key)  {
+        if (key.isEmpty()) return  new ResultUtil(403,"url错误",null);
         URI uri= null;
         try {
             uri = new URI(key);
