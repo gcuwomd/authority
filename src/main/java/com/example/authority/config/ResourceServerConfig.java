@@ -24,6 +24,7 @@ public class ResourceServerConfig {
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/auth/department/list").permitAll()
                         // 下边一行是放行接口的配置，被放行的接口上不能有权限注解，e.g @PreAuthorize，否则无效
                         .requestMatchers( HttpMethod.POST,"/user/register","/putPhoto").permitAll()
 

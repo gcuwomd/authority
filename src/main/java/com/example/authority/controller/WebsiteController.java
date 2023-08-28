@@ -102,7 +102,7 @@ public class WebsiteController {
     }
 
     @GetMapping("/auth/website/list")
-    ResultUtil getWebsiteList(@RequestParam String id) {
+    ResultUtil getWebsiteList(@RequestParam(required = false) String id) {
         if ((id == null)) return new ResultUtil(403, "参数值不能为空", null);
         return ResultUtil.sucess(websiteService.getWebsiteList(id));
 

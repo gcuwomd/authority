@@ -71,8 +71,11 @@
                  LEFT JOIN unity_department d ON o.organization_id = d.organization_id
     </select>
     <select id="getWebsiteList" resultType="com.example.authority.pojo.pojoPlus.WebsitePlus">
-        select  website_id,website_name,website_url,website_logo ,department_name from unity_website,unity_department WHERE
-                unity_website.department_id IN (SELECT department_id FROM unity_user WHERE  username=#{id}) AND unity_website.department_id=unity_department.department_id
+        select website_id, website_name, website_url, website_logo, department_name
+        from unity_website,
+             unity_department
+        WHERE unity_website.department_id IN (SELECT department_id FROM unity_user WHERE username = #{id})
+          AND unity_website.department_id = unity_department.department_id
 
     </select>
     <select id="getApiList" resultType="com.example.authority.pojo.UnitySystemApi">

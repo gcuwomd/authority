@@ -45,6 +45,8 @@ public class CommonServiceimpl implements CommonService {
         UnityAdmin unityAdmin = commonMapper.judgeSuper(username);
         if(unityAdmin!=null) json.put("super",true);
         json.put("super",false);
+
+
             json.put("route",unityRouteLists);
         json.put("api",apiList);
 
