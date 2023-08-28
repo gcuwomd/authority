@@ -3,6 +3,7 @@ package com.example.authority.Service.impl;
 import com.example.authority.Service.MemberService;
 import com.example.authority.mapper.MemberMapper;
 import com.example.authority.pojo.PageBean;
+import com.example.authority.pojo.Role;
 import com.example.authority.pojo.User;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,8 +45,18 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean addUserRole(String username, List list) {
-        memberMapper.addUserRoel(list,username);
-        return false;
+        List listUser=new ArrayList<>();
+        listUser.add(username);
+        memberMapper.deleteRelation(listUser);
+
+        return  memberMapper.addUserRoel(list,username);
+    }
+
+    @Override
+    public List<Role> getRole(String websiteId) {
+
+        return    memberMapper.getRole(websiteId);
     }
 }

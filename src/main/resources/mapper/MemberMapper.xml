@@ -42,12 +42,18 @@
     </delete>
 
     <select id="getMemberList" resultType="com.example.authority.pojo.User">
-        select department_id, username, name, phone, email, nick_name, major, grade, class_number, dorm, politicsStatus, avatar, position From unity_user
-        <where >
+        select unity_user.department_id, unity_user.username, name, phone, email, nick_name, major, grade, class_number,
+        dorm, politicsStatus, avatar, position,unity_role.role_id,role_name From unity_user,unity_user_role,unity_role
+        where unity_user.username=unity_user_role.username AND
+        unity_user_role.role_id=unity_role.role_id AND  unity_role.department_id=#{departmentId}
+        <where>
             <if test="searchType=='phone'">phone=#{keyword}</if>
             <if test="searchType=='username'">username=#{username}</if>
             <if test="searchType=='name'">name=#{name}</if>
             <if test="searchType=='major'">major=#{major}</if>
         </where>
+    </select>
+    <select id="getRole" resultType="com.example.authority.pojo.Role">
+        SELECT role_id ,role_name FROM unity_role WHERE role_id IN(SELECT role_id FROM unity_role_website WHERE website_id=#{websiteId})
     </select>
 </mapper>

@@ -4,10 +4,54 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.authority.mapper.CommonMapper">
     <select id="getaccessibleWebsite" resultType="com.example.authority.pojo.Website">
-        SELECT website_name,website_logo,website_url from unity_website WHERE website_id
-                                                                                  IN( SELECT website_id FROM  unity_role_website WHERE role_id
-                                                                                                                                           IN ( SELECT role_id FROM unity_user_role WHERE username=#{id}))
+        SELECT website_name, website_logo, website_url
+        from unity_website
+        WHERE website_id
+                  IN (SELECT website_id
+                      FROM unity_role_website
+                      WHERE role_id
+                                IN (SELECT role_id FROM unity_user_role WHERE username = #{id}))
 
 
+    </select>
+    <select id="getUserPassWebsite" resultType="com.example.authority.pojo.Website">
+        SELECT website_name, website_logo, website_url, website_id
+        FROM unity_website
+        WHERE website_id
+                  IN (SELECT website_id
+                      FROM unity_role_website
+                      WHERE role_id in (SELECT role_id FROM unity_user_role WHERE username = #{username}))
+
+    </select>
+    <select id="getUserInfo" resultType="com.example.authority.pojo.User">
+        SELECT name, avatar
+        FROM unity_user
+        WHERE username = #{username}
+    </select>
+    <select id="getUserInfoByChildWebsite" resultType="com.example.authority.pojo.User">
+        SELECT name, avatar, unity_user.department_id department_id, organization_id
+        FROM unity_user,
+             unity_department
+        WHERE unity_user.department_id = unity_department.department_id
+          AND username = #{username}
+    </select>
+    <select id="queryWebsiteRoute" resultType="com.example.authority.pojo.UnitySystemApi">
+        SELECT route_id, route_url, route_description
+        FROM unity_route_list
+        WHERE website_id = #{websiteId}
+          AND route_id IN (SELECT route_id
+                           FROM unity_role_route
+                           WHERE role_id IN (SELECT role_id FROM unity_user_role WHERE username = #{username}))
+    </select>
+    <select id="queryWebsiteApi" resultType="com.example.authority.pojo.UnityRouteList">
+        SELECT api_id, api_url, api_description
+        FROM unity_system_api
+        WHERE website_id = #{websiteId}
+          AND  api_id IN (SELECT api_id
+                           FROM unity_role_route
+                           WHERE role_id IN (SELECT role_id FROM unity_user_role WHERE username = #{username}))
+    </select>
+    <select id="judgeSuper" resultType="com.example.authority.pojo.UnityAdmin">
+        SELECT  super_authority from unity_admin  where  username=#{username}
     </select>
 </mapper>

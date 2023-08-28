@@ -81,4 +81,8 @@ public class RoleController {
         return new ResultUtil(403,"route或api不存在",null);
 
     }
+    @GetMapping("/auth/role/permission")
+    ResultUtil getAPIRouteByRoleId(@RequestParam String roleId){
+       return ResultUtil.sucess(roleService.getRouteApiById(roleId));
+    }
 }

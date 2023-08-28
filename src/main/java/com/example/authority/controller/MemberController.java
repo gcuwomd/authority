@@ -51,9 +51,14 @@ public class MemberController {
         try {
             memberService.addUserRole(username,list);
         } catch (Exception e) {
-           return  new ResultUtil(403,"已有存在角色或者角色不存在",null);
+           e.printStackTrace();
         }
         return ResultUtil.sucess();
+    }
+    @GetMapping("/autn/member/role")
+    ResultUtil  memberWebsiteRole(@RequestParam String websiteId){
+        return ResultUtil.sucess(memberService.getRole(websiteId));
+
     }
 
 }

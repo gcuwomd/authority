@@ -1,5 +1,6 @@
 package com.example.authority.mapper;
 
+import com.example.authority.pojo.Role;
 import com.example.authority.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -16,4 +17,7 @@ public interface MemberMapper {
     boolean deleteMember(List list);
 
     boolean addUserRoel(List list,String username);
+
+    List<Role> getRole(String websiteId);
+
 }
