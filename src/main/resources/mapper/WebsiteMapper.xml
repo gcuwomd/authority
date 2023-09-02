@@ -85,7 +85,7 @@
         select count(*) FROM unity_route_list WHERE website_id=#{websiteId}
     </select>
     <select id="getWebsiteInfo" resultType="com.example.authority.pojo.Website">
-        select  website_id,website_url,department_name,website_name from unity_website,unity_department where website_id=#{websiteId} AND unity_website.department_id=unity_department.department_id
+        select  website_id,website_url,department_name,website_name,website_logo from unity_website,unity_department where website_id=#{websiteId} AND unity_website.department_id=unity_department.department_id
     </select>
     <select id="websiteApiNumber" resultType="java.lang.Integer">
         select count(*) from unity_system_api where website_id=#{websiteId}
