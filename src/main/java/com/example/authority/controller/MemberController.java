@@ -55,7 +55,7 @@ public class MemberController {
         }
         return ResultUtil.sucess();
     }
-    @GetMapping("/autn/member/role")
+    @GetMapping("/auth/member/role")
     ResultUtil  memberWebsiteRole(@RequestParam String websiteId){
         return ResultUtil.sucess(memberService.getRole(websiteId));
 
