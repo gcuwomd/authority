@@ -1,15 +1,19 @@
 package com.example.authority.Service.impl;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.example.authority.Service.RoleService;
 import com.example.authority.mapper.RoleMapper;
 import com.example.authority.pojo.PageBean;
 import com.example.authority.pojo.Role;
+import com.example.authority.pojo.UnityRouteList;
+import com.example.authority.pojo.UnitySystemApi;
 import com.example.authority.util.uuidUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -53,6 +57,18 @@ public class RoleServiceImpl implements RoleService {
         if ( roleMapper.deleteRoleApi(api)&&
         roleMapper.deleteRoleRoute(route)) return true;
         return false;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public JSONObject getRouteApiById(String roleId) {
+        List<UnitySystemApi> apiByRoleId = roleMapper.getApiByRoleId(roleId);
+        List<UnityRouteList> routeByRoleId = roleMapper.getRouteByRoleId(roleId);
+        JSONObject roleMsg=new JSONObject();
+        roleMsg.put("api",apiByRoleId);
+        roleMsg.put("route",routeByRoleId);
+
+        return roleMsg;
     }
 
 

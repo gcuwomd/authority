@@ -4,6 +4,8 @@ import com.example.authority.Service.CommonService;
 import com.example.authority.util.OssUtil;
 import com.example.authority.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,6 +43,7 @@ public class CommonController {
     }
     @DeleteMapping("/auth/photo")
     ResultUtil deleteImg(String key)  {
+        if (key.isEmpty()) return  new ResultUtil(403,"url错误",null);
         URI uri= null;
         try {
             uri = new URI(key);
@@ -50,5 +53,17 @@ public class CommonController {
         }
         ossUtil.delete(uri.getPath());
         return ResultUtil.sucess();
+    }
+@GetMapping("/auth/user/website")
+        ResultUtil  navigation(@AuthenticationPrincipal Jwt jwt){
+        String username= (String) jwt.getClaims().get("sub");
+        if (username==null) return ResultUtil.error();
+        return ResultUtil.sucess( commonService.naviInfo(username));
+        }
+    @GetMapping("/auth/user/info")
+    ResultUtil  childWebsiteInfo(@AuthenticationPrincipal Jwt jwt,@RequestParam String websiteId){
+        String username= (String) jwt.getClaims().get("sub");
+        if (username==null) return ResultUtil.error();
+        return ResultUtil.sucess( commonService.childWebsiteInfo(username,websiteId));
     }
 }

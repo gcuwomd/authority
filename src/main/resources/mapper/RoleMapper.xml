@@ -37,4 +37,14 @@
     <select id="getRoleList" resultType="com.example.authority.pojo.Role">
         select role_id,role_name from unity_role where department_id=#{departmentId}
     </select>
+    <select id="getRouteByRoleId" resultType="com.example.authority.pojo.UnityRouteList">
+        SELECT route_id,route_url,route_description FROM unity_route_list WHERE route_id IN(
+            SELECT route_id FROM unity_role_route WHERE role_id=#{roleId}
+        )
+    </select>
+    <select id="getApiByRoleId" resultType="com.example.authority.pojo.UnitySystemApi">
+        SELECT api_id, api_url, api_description
+        FROM unity_system_api
+        WHERE api_id IN (SELECT api_id FROM unity_role_api WHERE role_id =#{roleId})
+    </select>
 </mapper>

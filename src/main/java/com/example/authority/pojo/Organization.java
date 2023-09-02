@@ -9,6 +9,7 @@ import java.util.List;
 public class Organization {
     private  String organizationId;
     private  String OrganizationName;
+
     private String OrganizationAvatar;
     private List<Department> department;
 }

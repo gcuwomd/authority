@@ -1,6 +1,7 @@
 package com.example.authority.Service;
 
 import com.example.authority.pojo.PageBean;
+import com.example.authority.pojo.Role;
 import com.example.authority.pojo.User;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface MemberService {
     boolean deleteMember(List list);
 
     boolean addUserRole(String username, List list);
+
+    List<Role> getRole(String websiteId);
 }

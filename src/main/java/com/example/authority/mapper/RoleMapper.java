@@ -2,6 +2,8 @@ package com.example.authority.mapper;
 
 import com.alibaba.fastjson.JSONArray;
 import com.example.authority.pojo.Role;
+import com.example.authority.pojo.UnityRouteList;
+import com.example.authority.pojo.UnitySystemApi;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -21,4 +23,6 @@ public interface RoleMapper {
     boolean deleteRoleApi(JSONArray api);
 
     boolean deleteRoleRoute(JSONArray route);
+    List<UnityRouteList> getRouteByRoleId(String roleId);
+    List<UnitySystemApi> getApiByRoleId(String roleId);
 }
